@@ -1,0 +1,20 @@
+<!-- order_success.html -->
+{% extends 'base.html' %}
+{% load custom_messages %}
+
+{% block content %}
+{% show_messages %}
+<br><br>
+<div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <h2 style="color: #333; text-align: center;">Payment Successful</h2>
+  <p style="text-align: center; font-size: 18px;">
+    Thank you for your purchase! Your payment has been processed successfully.
+    <br>
+    <strong>Total: ${{ cart_total|floatformat:2 }}</strong> <!-- Display the cart total here -->
+    <br>
+    <a href="{% url 'generate_receipt' %}" style="display: block; text-align: center; margin-top: 20px;">
+      Click here to download your receipt
+    </a>
+  </p>
+</div>
+{% endblock %}

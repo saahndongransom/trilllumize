@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% load static %}
+{% load custom_messages %} 
+
+{% block content %}
+{% show_messages %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Add your custom CSS file -->
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"> <!-- Add font-awesome CSS file -->
+
+<!-- Banner Starts Here -->
+<div class="heading-page header-text">
+  <section class="page-heading">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="text-content">
+            <h4>Recent Posts</h4>
+            <h2>Our Recent Blog Entries</h2>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+<!-- Banner Ends Here -->
+
+<section class="call-to-action">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-content">
+          <div class="row">
+            <div class="col-lg-8">
+              <span>Visit Shopping Page</span>
+              <h4>Shop the Latest Products!!</h4>
+             
+            </div>
+            <div class="col-lg-4">
+              <div class="main-button">
+                <a href="https://templatemo.com/tm-551-stand-blog" target="_parent">Shop Now!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-8">
+      <!-- Main Content Here -->
+      <section class="blog-posts grid-system">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="all-blog-posts">
+                <div class="row">
+                  {% for post in blog_posts reversed %}
+                  <div class="col-lg-6">
+                    <div class="blog-post">
+                      <div class="blog-thumb">
+                        <a href="{% url 'post_details' post.slug %}">
+                          <img src="{{ post.image_url }}" alt="" style="width: 100%; height: 200px; object-fit: cover;">
+                      </a>
+                      
+                      </div>
+                      <div class="down-content">
+                        <span>Lifestyle</span>
+                        {% if post %}
+                        <a href="{% url 'post_details'  post_slug=post.slug %}">
+                          <h4>{{ post.title }}</h4>
+                        </a>
+                        {% else %}
+                        <p>No blog post available.</p>
+                        {% endif %}
+
+                        <ul class="post-info">
+                          <li><a href="#">{{ post.author }}</a></li>
+                          <li><a href="#">{{ post.pub_date }}</a></li>
+                          <li>
+                            {% if post.comments.count > 0 %}
+                              <a href="{% url 'post_details'  post_slug=post.slug %}">{{ post.comments.count }}Comm{{ post.comments.count|pluralize }}</a>
+                            {% else %}
+                              <a href="{% url 'post_details'  post_slug=post.slug %}">No Com</a>
+                            {% endif %}
+                          </li>
+                        </ul>
+                        <p>
+                          {% if post.content|safe|wordcount >= 50 %}
+                          {{ post.content|safe|slice:":100"}}...
+                          {% else %}
+                          {{ post.content|safe }}
+                          {% endif %}
+                        </p>
+
+                        <div class="post-options">
+                          <div class="row">
+                            <div class="col-lg-12">
+                              <ul class="post-tags">
+                                <li><i class="fa fa-tags"></i></li>
+                                <li><a href="#">Visit</a>,</li>
+                                <li><a href="#">SHOP</a></li>
+                              </ul>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  {% endfor %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div class="col-lg-12">
+        <!-- Page numbers -->
+        <ul class="page-numbers">
+          {% for page_num in blog_posts.paginator.page_range %}
+          <li{% if blog_posts.number == page_num %} class="active"{% endif %}>
+            <a href="?page={{ page_num }}">{{ page_num }}</a>
+          </li>
+          {% endfor %}
+          {% if blog_posts.has_next %}
+          <li>
+            <a href="?page={{ blog_posts.next_page_number }}"><i class="fa fa-angle-double-right"></i></a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+
+    <div class="col-lg-4">
+      <!-- Sidebar Here -->
+      <br>
+      <br>
+      <br>
+      <div class="sidebar">
+        <div class="row">
+          <div class="col-lg-12">
+            <div class="sidebar-item search">
+              <form id="search_form" name="gs" method="GET" action="{% url 'blog' %}">
+                <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on" value="{{ request.GET.q }}">
+                <input type="submit" value="Search">
+            </form>
+            </div>
+          </div>
+          <div class="col-lg-12">
+            <div class="sidebar-item recent-posts">
+              <div class="sidebar-heading">
+                <h2>Recent Posts</h2>
+              </div>
+              <div class="content">
+                <ul>
+                  {% for post in recent_posts reversed %}
+                  <li>
+                    <a href="{% url 'post_details'  post_slug=post.slug %}">
+                      <h5>{{ post.title }}</h5>
+                      <span>{{ post.pub_date|date:"M d, Y" }}</span>
+                    </a>
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="sidebar-item categories">
+            <div class="sidebar-heading">
+              <h2>Categories</h2>
+            </div>
+            <div class="content">
+              <ul>
+                {% for category in categories %}
+                <li><a href="{% url 'blog_with_category' category.slug %}">{{ category.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+          <div class="sidebar-item tags">
+            <div class="sidebar-heading">
+              <h2>Tag Clouds</h2>
+            </div>
+            <div class="content">
+              <ul>
+                {% for tag in tags %}
+                <li><a href="{% url 'blog_with_tag' tag.slug %}">{{ tag.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="subscribe-container" id="subscribe-container">
+        <div class="subscribe-message">
+          Subscribe to our newsletter to receive updates and special offers!
+        </div>
+        
+        <form action="{% url 'subscribe_newsletter' %}" method="post" class="subscribe-form" onsubmit="handleFormSubmission(event)">
+          {% csrf_token %}
+          <input type="email" name="email" placeholder="Your email" required>
+          <button type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% if messages %}
+  <div class="messages-container" style="margin-top: 20px; padding: 10px; position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 9999; width: 90%;">
+    {% for message in messages %}
+      <div class="message message-{{ message.tags }}" style="background-color: {% if message.tags == 'error' %}#f44336{% elif message.tags == 'warning' %}#ff9800{% elif message.tags == 'info' %}#2196f3{% elif message.tags == 'success' %}#4CAF50{% else %}#888{% endif %}; color: #fff; padding: 10px; border-radius: 5px; margin-bottom: 10px;">
+        {{ message }}
+        <span class="close-button" style="cursor: pointer; float: right; font-weight: bold;" onclick="this.parentNode.style.display='none';">&times;</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+
+
+<script>
+  // Function to clear messages from the session
+  function clearMessages() {
+    fetch('{% url 'clear_messages' %}', {
+      method: 'POST',
+      headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+    });
+  }
+
+  // Clear messages when the page is unloaded (navigating away)
+  window.addEventListener('unload', clearMessages);
+</script>

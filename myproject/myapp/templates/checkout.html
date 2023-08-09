@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load custom_messages %}
+{% load custom_filters %}
+{% block content %}
+{% show_messages %}
+<br><br>
+<div style="max-width: 600px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; background-color: #f9f9f9;">
+  <h2 style="color: #333; text-align: center;">Checkout</h2>
+
+  {% if cart_items %}
+  <ul style="list-style: none; padding: 0;">
+    {% for item in cart_items %}
+    <li style="border: 1px solid #ccc; padding: 10px; margin: 10px 0; background-color: #fff;">
+        <strong>{{ item.title }}</strong><br>
+        <span style="color: #555;">Price: ${{ item.price|floatformat:2 }}</span><br>
+        Quantity: {{ item.quantity }}<br>
+        Subtotal: ${{ item.price|floatformat:2|multiply:item.quantity|floatformat:2 }}  <!-- Use the custom filter here -->
+    </li>
+    {% endfor %}
+</ul>
+    <p style="text-align: right; font-size: 18px; margin-top: 20px;">Total: ${{ cart_total|floatformat:2 }}</p>
+    <form method="POST" action="{% url 'checkout' %}" style="text-align: right;">
+      {% csrf_token %}
+      {{ form.as_p }}  <!-- Include the form here using 'as_p' or 'as_table' or 'as_ul' for different renderings -->
+      <button type="submit" style="background-color: #007bff; color: #fff; padding: 10px 20px; font-size: 16px; border: none; cursor: pointer; margin-top: 20px;">Proceed to Payment</button>
+    </form>
+  {% else %}
+    <p style="text-align: center; font-size: 18px;">Your cart is empty.</p>
+  {% endif %}
+</div>
+
+{% endblock %}

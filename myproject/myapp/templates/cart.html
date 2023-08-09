@@ -1,0 +1,39 @@
+<!-- cart.html -->
+
+{% extends 'base.html' %}
+{% load custom_messages %} 
+
+{% block content %}
+{% show_messages %}
+<br><br><br><br><br>
+<div style="margin: 20px auto; max-width: 600px;">
+  <h2 style="color: #333;">Your Cart</h2>
+  {% if cart_items %}
+    <ul style="list-style: none; padding: 0;">
+      {% for item in cart_items %}
+        <li style="border: 1px solid #ccc; padding: 10px; margin: 10px 0; background-color: #f9f9f9;">
+          <strong>{{ item.title }}</strong><br>
+          <span style="color: #555;">Price: ${{ item.price|floatformat:2 }}</span><br>
+          Quantity:
+          <form method="POST" action="{% url 'update_cart_quantity' item.id %}" style="display: inline;">
+            {% csrf_token %}
+            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 50px;">
+            <button type="submit" style="background-color: #007bff; color: #fff; padding: 5px 10px; border: none; cursor: pointer;">Update</button>
+          </form>
+          <form method="POST" action="{% url 'remove_from_cart' item.id %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: #dc3545; color: #fff; padding: 5px 10px; border: none; cursor: pointer;">Remove</button>
+          </form>
+        </li>
+      {% endfor %}
+    </ul>
+    <p style="text-align: right; font-size: 18px; margin-top: 20px;">Cart Total: ${{ cart_total|floatformat:2 }}</p>
+    <form method="POST" action="{% url 'checkout' %}" style="text-align: right;">
+      {% csrf_token %}
+      <button type="submit" style="background-color: #28a745; color: #fff; padding: 10px 20px; font-size: 16px; border: none; cursor: pointer;">Proceed to Checkout</button>
+    </form>
+  {% else %}
+    <p style="text-align: center; font-size: 18px;">Your cart is empty.</p>
+  {% endif %}
+</div>
+{% endblock %}

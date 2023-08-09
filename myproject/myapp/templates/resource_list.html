@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load custom_messages %}
+
+{% block content %}
+  {% show_messages %}
+  <br><br><br>
+  <div style="text-align: right; margin-top: 20px; background-color: #333;">
+    {% if user.is_authenticated %}
+      <p>Welcome, {{ user.username }}! <a href="{% url 'logout' %}" style="color: #333; text-decoration: none;">Logout</a></p>
+    {% else %}
+      <p>You are not logged in. <a href="{% url 'login' %}" style="color: #333; text-decoration: none;">Login</a></p>
+    {% endif %}
+    <br>
+    <a href="{% url 'view_cart' %}" style="position: relative; display: inline-block; color: #333; text-decoration: none;">
+      <span style="font-size: 24px;">🛒</span>
+      <span id="cart-badge" style="position: absolute; top: -10px; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 2px 5px; font-size: 12px; display: none;">0</span>
+    </a>
+    {% if user.is_authenticated %}
+      <p><a href="{% url 'logout' %}" style="color: #333; text-decoration: none;">Sign Out</a></p>
+    {% endif %}
+  </div>
+
+  <div style="max-width: 800px; margin: 20px auto;">
+    <h2 style="text-align: center;">Available Resources</h2>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+      {% for resource in resources %}
+        <div style="border: 1px solid #ccc; padding: 10px; background-color: #fff; border-radius: 5px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+          <h3 style="font-size: 18px; font-weight: bold; margin-bottom: 10px;">{{ resource.title }}</h3>
+          {% if resource.resource_type == 'video' %}
+            <video width="100%" height="150" controls>
+              <source src="{{ resource.file.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% elif resource.resource_type == 'pdf' %}
+            <iframe src="{{ resource.file.url }}" width="100%" height="150"></iframe>
+          {% elif resource.resource_type == 'picture' %}
+            <img src="{{ resource.file.url }}" alt="{{ resource.title }}" style="width: 100%; max-height: 150px; object-fit: cover;">
+          {% elif resource.resource_type == 'audio' %}
+            <audio controls style="width: 100%;">
+              <source src="{{ resource.file.url }}" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+          {% else %}
+            <p>No preview available</p>
+          {% endif %}
+          <p style="margin: 10px 0;">Price: ${{ resource.price|floatformat:2 }}</p>
+          <form method="POST" action="{% url 'add_to_cart' resource.id %}" style="text-align: center;">
+            {% csrf_token %}
+            <button type="submit" style="background-color: #28a745; color: #fff; padding: 5px 10px; border: none; cursor: pointer; border-radius: 5px; margin-top: 10px;">Add to Cart</button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    // Fetch the cart count from the server and update the badge
+    fetch('{% url 'cart_count' %}')
+      .then(response => response.json())
+      .then(data => {
+        const cartBadge = document.getElementById('cart-badge');
+        cartBadge.innerText = data.count;
+        if (data.count > 0) {
+          cartBadge.style.display = 'block';
+        } else {
+          cartBadge.style.display = 'none';
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching cart count:', error);
+      });
+  </script>
+
+{% endblock %}

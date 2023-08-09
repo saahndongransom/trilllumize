@@ -1,0 +1,335 @@
+{% extends 'base.html' %}
+{% load custom_messages %} 
+{% block title %}Trillumize Community{% endblock %}
+
+{% load static %}
+
+{% block content %}
+{% show_messages %}
+ 
+
+
+<style>
+  /* Custom container class to increase the width */
+  .custom-container {
+    max-width: 1200px; /* Set your desired width here */
+    margin: 0 auto; /* Center the container horizontally */
+  }
+
+  /* Dark overlay to create a darkened effect */
+  .dark-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Change the opacity value (0.5 in this case) for the desired darkness */
+    z-index: 1; /* Place the overlay behind the text but above the image */
+  }
+
+  /* Add a bullet point style to the list */
+  .sidebar-item.categories .content ul {
+    list-style-type: disc; /* Change disc to other values like circle or square for different bullet styles */
+    margin-left: 20px; /* Adjust the left margin to control the distance of the bullet points from the text */
+  }
+
+  /* Remove default list styles (optional, but recommended) */
+  .sidebar-item.categories .content ul {
+    padding-left: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .sidebar-item.categories .content ul li {
+    margin: 5px 0;
+  }
+
+  /* Adjust the positioning of the title and make it clickable */
+  .item {
+    position: relative;
+  }
+
+  .item img {
+    width: 600px;
+    height: 400px;
+  }
+
+  .item-content {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: white;
+    z-index: 2; /* Ensure the title appears above the overlay */
+  }
+
+  .item-content h4 {
+    margin: 0;
+  }
+
+  .item-content a {
+    color: white;
+    text-decoration: none;
+  }
+</style>
+
+<!-- Banner Section -->
+<div class="main-banner header-text">
+  <div class="container-fluid custom-container">
+    <div class="owl-banner owl-carousel">
+      <!-- Loop through the blog_posts and display each post as a banner item -->
+      {% for post in blog_posts reversed %}
+      
+      <div class="item">
+        <div class="dark-overlay"></div> <!-- The dark overlay -->
+        <img src="{{ post.image_url }}" alt="{{ post.title }}">
+        <div class="item-content">
+          <div class="main-content">
+            <div class="meta-category">
+            </div>
+            <h4>
+              <a href="{% url 'post_details' post_slug=post.slug %}">{{ post.title }}</a>
+            </h4>
+            <ul class="post-info">
+              <li><a href="#">{{ post.author }}</a></li>
+              <li><a href="#">{{ post.pub_date }}</a></li>
+              <!-- On the blog page -->
+              <li>
+                {% if post.comments.count > 0 %}
+                  <a href="{% url 'post_details' post_slug=post.slug %}">{{ post.comments.count }} Comment{{ post.comments.count|pluralize }}</a>
+                {% else %}
+                  <a href="{% url 'post_details' post_slug=post.slug %}">No Comments</a>
+                {% endif %}
+              </li>
+              <!-- Replace this with actual comments count if available -->
+            </ul>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Banner Section -->
+
+
+
+
+<!-- Banner Ends Here -->
+
+<!-- Call-to-Action Section -->
+<section class="call-to-action">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="main-content">
+          <div class="row">
+            <div class="col-lg-8">
+              <span>Visit Shopping Page</span>
+              <h4>Shop the Latest Products!</h4>
+            </div>
+            <div class="col-lg-4">
+              <div class="main-button">
+                <a rel="nofollow" href="#" target="_parent">shop Now!</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Call-to-Action Section Ends Here -->
+
+<!-- Blog Posts Section -->
+<section class="blog-posts">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-8">
+        <div class="all-blog-posts">
+          <div class="row">
+            {% for post in blog_posts reversed %}
+              {% if forloop.counter <= 3 %} {# Limit to only three posts #}
+                <div class="col-lg-12">
+                  <div class="blog-post">
+                    <div class="blog-thumb">
+                      <img src="{{ post.image_url }}" alt="{{ post.title }}">
+                    </div>
+                    <div class="down-content">
+                      <span>Lifestyle</span> <!-- Update the category if available -->
+                      <a href="{% url 'post_details'  post_slug=post.slug %}">
+                        <h4>{{ post.title }}</h4>
+                      </a>
+                      <ul class="post-info">
+                        <li><a href="#">{{ post.author }}</a></li>
+                        <li><a href="#">{{ post.pub_date }}</a></li>
+                        <!-- On the blog page -->
+                        <li>
+                          {% if post.comments.count > 0 %}
+                            <a href="{% url 'post_details'  post_slug=post.slug %}">{{ post.comments.count }} Comment{{ post.comments.count|pluralize }}</a>
+                          {% else %}
+                            <a href="{% url 'post_details'  post_slug=post.slug %}">No Comments</a>
+                          {% endif %}
+                        </li>
+                      </ul>
+                      <p>
+                        {% if post.content|wordcount >= 200 %}
+                          {{ post.content|slice:":400" |safe}}...
+                        {% else %}
+                          {{ post.content }}
+                        {% endif %}
+                      </p>
+                      <div class="post-options">
+                        <div class="row">
+                          <div class="col-6">
+                            <ul class="post-tags">
+                              <li><i class="fa fa-tags"></i></li>
+                              <li><a href="#">Beauty</a>,</li>
+                              <li><a href="#">Nature</a></li>
+                            </ul>
+                          </div>
+                          <div class="col-6">
+                            <ul class="post-share">
+                              <li><i class="fa fa-share-alt"></i></li>
+                              <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">Facebook</a>,</li>
+                              <!-- Use request.build_absolute_uri to get the current post URL dynamically -->
+                              <li><a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank">Twitter</a></li>
+                              <!-- Use request.build_absolute_uri to get the current post URL dynamically -->
+                            </ul>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      
+                  
+                
+                    </div>
+                  </div>
+                </div>
+              
+              {% endif %}
+            {% endfor %}
+            <div class="col-lg-12">
+              <div class="main-button">
+                <a class="nav-link" href="{% url 'blog' %}">View All Posts</a>
+             
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-4">
+        <!-- Sidebar content goes here -->
+        <div class="sidebar">
+          <div class="row">
+            <div class="col-lg-12">
+              <div class="sidebar-item search">
+                <form id="search_form" name="gs" method="GET" action="{% url 'blog' %}">
+                  <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on" value="{{ request.GET.q }}">
+                  <input type="submit" value="Search">
+              </form>
+              </div>
+            </div>
+            <div class="col-lg-12">
+              <div class="sidebar-item recent-posts">
+                <div class="sidebar-heading">
+                  <h2>Recent Posts</h2>
+                </div>
+                <div class="content">
+                  <ul>
+                    {% for post in recent_posts reversed %}
+                    
+  <li>
+    <img src="{{ post.image_url }}" alt="" style="width: 100%; height: 100px; object-fit: cover;">
+    <a href="{% url 'post_details' post_slug=post.slug %}">
+      <h5>{{ post.title }}</h5>
+      <span>{{ post.pub_date|date:"M d, Y" }}</span>
+    </a>
+  </li>
+{% endfor %}
+
+                  </ul>
+                </div>
+              </div>
+            </div>
+            <div class="sidebar-item categories">
+              <div class="sidebar-heading">
+                <h2>Categories</h2>
+              </div>
+              <div class="content">
+                <ul>
+                  {% for category in categories %}
+                  <li><a href="{% url 'blog_with_category' category.slug %}">{{ category.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+            <div class="sidebar-item tags">
+              <div class="sidebar-heading">
+                <h2>Tag Clouds</h2>
+              </div>
+              <div class="content">
+                <ul>
+                  {% for tag in tags %}
+                    <li><a href="{% url 'blog_with_tag' tag.slug %}">{{ tag.name }}</a></li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+            <div class="subscribe-container">
+              <div class="subscribe-message">
+                Subscribe to our newsletter to receive updates and special offers!
+              </div>
+            
+              <form action="{% url 'subscribe_newsletter' %}" method="post" class="subscribe-form" onsubmit="handleFormSubmission(event)">
+                {% csrf_token %}
+                <input type="email" name="email" placeholder="Your email" required>
+                <button type="submit">Subscribe</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+          
+          
+        
+              
+
+                     
+<!-- Blog Posts Section Ends Here -->
+
+<!-- Other Sections and Footer -->
+<!-- Add other sections and footer as needed -->
+<!-- ... -->
+
+{% endblock %}
+
+{% block scripts %}
+<!-- Scripts -->
+<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/custom.js' %}"></script>
+<script src="{% static 'js/owl.js' %}"></script>
+<script src="{% static 'js/slick.js' %}"></script>
+<script src="{% static 'js/isotope.js' %}"></script>
+<script src="{% static 'js/accordions.js' %}"></script>
+<script language="text/Javascript">
+  // Your JavaScript code here...
+</script>
+{% endblock %}
+
+

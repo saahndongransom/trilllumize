@@ -1,0 +1,237 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_messages %} 
+{% block content %}
+{% show_messages %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Add your custom CSS file -->
+<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}"> <!-- Add font-awesome CSS file -->
+
+<!-- Banner Starts Here -->
+<div class="heading-page header-text">
+    <section class="page-heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-content">
+                        <h4>Post Details</h4>
+                        <h2>Single blog post</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- Banner Ends Here -->
+
+<section class="call-to-action">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="main-content">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <span>Stand Blog HTML5 Template</span>
+                            <h4>Creative HTML Template For Bloggers!</h4>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="main-button">
+                                <a rel="nofollow" href="https://templatemo.com/tm-551-stand-blog" target="_parent">Download Now!</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="blog-posts grid-system">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="all-blog-posts">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="blog-post">
+                                <div class="blog-thumb">
+                                    <img src="{% static 'images/blog-posdt-02.jpg' %}" alt="">
+                                    <img src="{{ blog_post.image_url }}" alt="{{ blog_post.title }}">
+                                </div>
+                                <div class="down-content">
+                                    <span>Lifestyle</span>
+                                    <a href="#"><h4>{{ blog_post.title }}</h4></a>
+                                    <ul class="post-info">
+                                        <li><a href="#">{{ blog_post.author }}</a></li>
+                                        <li><a href="#">{{ blog_post.pub_date }}</a></li>
+                                        <li><a href="#">{{ blog_post.comments.count }} Comments</a></li>
+                                    </ul>
+                                    <p>{{ blog_post.content|safe }}</p>
+                                    <div class="post-options">
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <ul class="post-tags">
+                                                    <li><i class="fa fa-tags"></i></li>
+                                                    <li><a href="#">Shop</a>,</li>
+                                                    <li><a href="#">Now!</a></li>
+                                                </ul>
+                                            </div>
+                                            <div class="col-6">
+                                                <ul class="post-share">
+                                                    <li><i class="fa fa-share-alt"></i></li>
+                                                    <li><a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank">Facebook</a>,</li>
+                                                    <!-- Use request.build_absolute_uri to get the current post URL dynamically -->
+                                                    <li><a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}" target="_blank">Twitter</a></li>
+                                                    <!-- Use request.build_absolute_uri to get the current post URL dynamically -->
+                                                  </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Additional comments section and comment form -->
+                        <div class="col-lg-12">
+                            <div class="sidebar-item comments">
+                                <div class="sidebar-heading">
+                                    <h2>{{ blog_post.comments.count }} comments</h2>
+                                </div>
+                                <div class="content">
+                                    <ul>
+                                        {% for comment in blog_post.comments.all %}
+                                        <li>
+                                            <div class="author-thumb">
+                                                <img src="{% static 'images/comm.jpg' %}" alt="comment">
+                                            </div>
+                                            <div class="right-content">
+                                                <h4>{{ comment.author }}<span>{{ comment.pub_date }}</span></h4>
+                                                <p>{{ comment.content }}</p>
+                                            </div>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="sidebar-item submit-comment">
+                                <div class="sidebar-heading">
+                                    <h2>Your comment</h2>
+                                </div>
+                                <div class="content">
+                                    <form id="comment" action="#" method="post">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-6 col-sm-12">
+                                                <fieldset>
+                                                    <input name="author" type="text" id="name" placeholder="Your name" required="">
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-6 col-sm-12">
+                                                <fieldset>
+                                                    <input name="email" type="text" id="email" placeholder="Your email" required="">
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-md-12 col-sm-12">
+                                                <fieldset>
+                                                    <input name="subject" type="text" id="subject" placeholder="Subject">
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <fieldset>
+                                                    <textarea name="content" rows="6" id="message" placeholder="Type your comment" required=""></textarea>
+                                                </fieldset>
+                                            </div>
+                                            <div class="col-lg-12">
+                                                <fieldset>
+                                                    <button type="submit" id="form-submit" class="main-button">Submit</button>
+                                                </fieldset>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="sidebar">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="sidebar-item search">
+                                <form id="search_form" name="gs" method="GET" action="{% url 'blog' %}">
+                                    <input type="text" name="q" class="searchText" placeholder="type to search..." autocomplete="on" value="{{ request.GET.q }}">
+                                    <input type="submit" value="Search">
+                                </form>
+                            </div>
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="sidebar-item recent-posts">
+                              <div class="sidebar-heading">
+                                <h2>Recent Posts</h2>
+                              </div>
+                              <div class="content">
+                                <ul>
+                                  {% for post in recent_posts %}
+                                  <li>
+                                    <a href="{% url 'post_details'  post_slug=post.slug %}">
+                                      <h5>{{ post.title }}</h5>
+                                      
+                                      <span>{{ post.pub_date|date:"M d, Y" }}</span>
+                                    </a>
+                                  </li>
+                                  {% endfor %}
+                                </ul>
+                              </div>
+                            </div>
+                          </div>
+                        
+                            <!-- ... -->
+            <div class="sidebar-item categories">
+                <div class="sidebar-heading">
+                    <h2>Categories</h2>
+                </div>
+                <div class="content">
+                    <ul>
+                        {% for category in categories %}
+                        <li><a href="{% url 'blog_with_category' category.slug %}">{{ category.name }}</a></li>
+                        {% endfor %}
+                      </ul>
+                </div>
+              </div>
+            </div>
+              <div class="sidebar-item tags">
+                <div class="sidebar-heading">
+                    <h2>Tag Clouds</h2>
+                </div>
+                <div class="content">
+                    <ul>
+                        {% for tag in tags %}
+                        <li><a href="{% url 'blog_with_tag' tag.slug %}">{{ tag.name }}</a></li>
+                      {% endfor %}
+                    </ul>
+                </div>
+              </div>
+              <!-- ... -->
+              
+              <div class="subscribe-container">
+            
+                <div class="subscribe-message">
+                  Subscribe to our newsletter to receive updates and special offers!
+                </div>
+               
+                <form action="{% url 'subscribe_newsletter' %}" method="post" class="subscribe-form" onsubmit="handleFormSubmission(event)">
+                  {% csrf_token %}
+                  <input type="email" name="email" placeholder="Your email" required>
+                  <button type="submit">Subscribe</button>
+                </form>
+              </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

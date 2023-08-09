@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  
+
+<!-- Banner Starts Here -->
+<div class="heading-page header-text">
+    <section class="page-heading">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="text-content">
+                        <h4>Contact Us</h4>
+                        <h2>Let’s Stay in Touch!</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<!-- Banner Ends Here -->
+<section class="contact-us">
+    {% if success %}
+    <p style="color: orange; font-size: 30px;">Thank you for your message! We will get back to you shortly.</p>
+{% endif %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="down-contact">
+                    <div class="row">
+                        <div class="col-lg-8">
+                            <div class="sidebar-item contact-form">
+                                <div class="sidebar-heading">
+                                    <h2>Send us a message</h2>
+                                </div>
+                                <div class="content">
+                                    <form id="contact" action="{% url 'contact' %}" method="post">
+                                        {% csrf_token %}
+                                        {{ form.as_p }}
+                                        <div class="col-lg-12">
+                                            <fieldset>
+                                                <button type="submit" id="form-submit" class="main-button">Send Message</button>
+                                            </fieldset>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="sidebar-item contact-information">
+                                <div class="sidebar-heading">
+                                    <h2>Contact Information</h2>
+                                </div>
+                                <div class="content">
+                                    <ul>
+                                        <li>
+                                            <h5>237650473572</h5>
+                                            <span>PHONE NUMBER</span>
+                                        </li>
+                                        <li>
+                                            <h5>trillumize@gmail.com.com</h5>
+                                            <span>EMAIL ADDRESS</span>
+                                        </li>
+                                        <li>
+                                            <h5>Buea Cameroon,
+                                                <br>Mile 18 </h5>
+                                            <span>STREET ADDRESS</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12">
+                <div id="map">
+                    <iframe src="{% static 'images/api.png' %}" width="800%" height="450px" frameborder="0" style="border:0" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}
+
+
+
+
+
